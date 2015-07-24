@@ -1,0 +1,187 @@
+================
+Trend Report Period (trendReportPeriod)
+================
+Utility will take a 'begin' and 'end' date combination, plus a set 'period' 
+and will provide a iterator that returns a tuple with datetime splits for
+each given period between 'begin' and 'end'.
+
+>>> import datetime
+>>> from sparc.db.report.period import trendReportPeriod
+>>> begin = datetime.datetime(2015,1,1)
+>>> end   = datetime.datetime(2015,1,10)
+>>> period = 'day'
+>>> myPeriodIterator = trendReportPeriod(begin=begin,end=end,period=period)
+>>> myPeriodIterator.period
+'day'
+>>> mySplits = list(myPeriodIterator)
+>>> mySplits[0]
+(datetime.datetime(2015, 1, 1, 0, 0), datetime.datetime(2015, 1, 2, 0, 0), '01 - Jan 01 2015')
+>>> mySplits[1]
+(datetime.datetime(2015, 1, 2, 0, 0), datetime.datetime(2015, 1, 3, 0, 0), '01 - Jan 02 2015')
+>>> mySplits[8]
+(datetime.datetime(2015, 1, 9, 0, 0), datetime.datetime(2015, 1, 10, 0, 0), '01 - Jan 09 2015')
+ 
+================
+ZCA Factory
+================
+It is best to use this class as a ZCA utility.  To use ZCA, we first need to
+configure the components.
+
+>>> from sparc.common import Configure
+>>> import sparc.db
+>>> Configure(sparc.db)
+
+We can now retrieve the iterator via component lookup, specifically we'll
+use zope.component.createObject to return instances from the factory.
+
+>>> from zope.component import createObject
+>>> myPeriod = createObject(u'sparc.db.trendReportPeriod')
+
+Now that we have an instance, let's set parameters
+
+>>> myPeriod.begin = datetime.datetime(2015,1,1,0,0,0) # Jan 1, 2015 Midnight
+>>> myPeriod.end = datetime.datetime(2015,1,1,0,1,0) # Jan 1, 2015 12:01 AM
+>>> myPeriod.period = 'second'
+
+Now we can use the object to get the period splits between begin/end
+
+>>> myPeriod.period
+'second'
+>>> len(myPeriod)
+60
+>>> list(myPeriod)[0]
+(datetime.datetime(2015, 1, 1, 0, 0), datetime.datetime(2015, 1, 1, 0, 0, 1), '00:00:00')
+>>> list(myPeriod)[1]
+(datetime.datetime(2015, 1, 1, 0, 0, 1), datetime.datetime(2015, 1, 1, 0, 0, 2), '00:00:01')
+>>> list(myPeriod)[2]
+(datetime.datetime(2015, 1, 1, 0, 0, 2), datetime.datetime(2015, 1, 1, 0, 0, 3), '00:00:02')
+
+We can also adjust our begin/end/period parameters and re-iterate of the object
+to get the new splits
+
+>>> myPeriod.begin = datetime.datetime(2014,12,31,23,59,0) # Dec 31, 2014 11:59 PM
+>>> len(myPeriod)
+120
+>>> myPeriod.end = datetime.datetime(2015,1,1,0,2,0) # Jan 1, 2015 12:02 AM
+>>> len(myPeriod)
+180
+>>> myPeriod.period = 'minute'
+>>> len(myPeriod)
+3
+
+================
+TESTS
+================
+
+>>> begin = datetime.datetime(2015,1,1,0,0,1) # Jan 1, 2015 12:00:01
+>>> end =   datetime.datetime(2015,1,1,1,0,1) # Jan 2, 2015 1:00:01 AM
+>>> period = 'minute'
+>>> myPeriod = trendReportPeriod(begin=begin,end=end,period=period)
+>>> myPeriod.period
+'minute'
+>>> list(myPeriod)[0]
+(datetime.datetime(2015, 1, 1, 0, 0, 1), datetime.datetime(2015, 1, 1, 0, 1), '00:00')
+>>> list(myPeriod)[1]
+(datetime.datetime(2015, 1, 1, 0, 1), datetime.datetime(2015, 1, 1, 0, 2), '00:01')
+>>> list(myPeriod)[2]
+(datetime.datetime(2015, 1, 1, 0, 2), datetime.datetime(2015, 1, 1, 0, 3), '00:02')
+>>> list(myPeriod)[len(list(myPeriod))-1]
+(datetime.datetime(2015, 1, 1, 1, 0), datetime.datetime(2015, 1, 1, 1, 0, 1), '01:00')
+
+>>> begin = datetime.datetime(2015,1,1,0,30,0) # Jan 1, 2015 12:30:00
+>>> end = datetime.datetime(2015,1,1,6,23,1) # Jan 2, 2015 6:23:01 AM
+>>> period = 'hour'
+>>> myPeriod = trendReportPeriod(begin=begin,end=end,period=period)
+>>> myPeriod.period
+'hour'
+>>> list(myPeriod)[0]
+(datetime.datetime(2015, 1, 1, 0, 30), datetime.datetime(2015, 1, 1, 1, 0), '01 - Jan 01, 00:30')
+>>> list(myPeriod)[1]
+(datetime.datetime(2015, 1, 1, 1, 0), datetime.datetime(2015, 1, 1, 2, 0), '01 - Jan 01, 01:00')
+>>> list(myPeriod)[2]
+(datetime.datetime(2015, 1, 1, 2, 0), datetime.datetime(2015, 1, 1, 3, 0), '01 - Jan 01, 02:00')
+>>> list(myPeriod)[len(list(myPeriod))-1]
+(datetime.datetime(2015, 1, 1, 6, 0), datetime.datetime(2015, 1, 1, 6, 23, 1), '01 - Jan 01, 06:00')
+
+>>> begin = datetime.datetime(2015,1,1,0,30,0) # Jan 1, 2015 12:30:00
+>>> end = datetime.datetime(2015,2,2,6,23,1) # Jan 2, 2015 6:23:01 AM
+>>> period = 'day'
+>>> myPeriod = trendReportPeriod(begin=begin,end=end,period=period)
+>>> myPeriod.period
+'day'
+>>> list(myPeriod)[0]
+(datetime.datetime(2015, 1, 1, 0, 30), datetime.datetime(2015, 1, 2, 0, 0), '01 - Jan 01 2015')
+>>> list(myPeriod)[1]
+(datetime.datetime(2015, 1, 2, 0, 0), datetime.datetime(2015, 1, 3, 0, 0), '01 - Jan 02 2015')
+>>> list(myPeriod)[2]
+(datetime.datetime(2015, 1, 3, 0, 0), datetime.datetime(2015, 1, 4, 0, 0), '01 - Jan 03 2015')
+>>> list(myPeriod)[len(list(myPeriod))-3]
+(datetime.datetime(2015, 1, 31, 0, 0), datetime.datetime(2015, 2, 1, 0, 0), '01 - Jan 31 2015')
+>>> list(myPeriod)[len(list(myPeriod))-2]
+(datetime.datetime(2015, 2, 1, 0, 0), datetime.datetime(2015, 2, 2, 0, 0), '02 - Feb 01 2015')
+>>> list(myPeriod)[len(list(myPeriod))-1]
+(datetime.datetime(2015, 2, 2, 0, 0), datetime.datetime(2015, 2, 2, 6, 23, 1), '02 - Feb 02 2015')
+
+>>> begin = datetime.datetime(2015,1,1,0,30,0) # Jan 1, 2015 12:30:00
+>>> end = datetime.datetime(2015,3,27,6,23,1) # Mar 27, 2015 6:23:01 AM
+>>> period = 'week'
+>>> myPeriod = trendReportPeriod(begin=begin,end=end,period=period)
+>>> myPeriod.period
+'week'
+>>> list(myPeriod)[0]
+(datetime.datetime(2015, 1, 1, 0, 30), datetime.datetime(2015, 1, 5, 0, 0), '4 - Thu, Jan 01 2015')
+>>> list(myPeriod)[1]
+(datetime.datetime(2015, 1, 5, 0, 0), datetime.datetime(2015, 1, 12, 0, 0), '1 - Mon, Jan 05 2015')
+>>> list(myPeriod)[2]
+(datetime.datetime(2015, 1, 12, 0, 0), datetime.datetime(2015, 1, 19, 0, 0), '1 - Mon, Jan 12 2015')
+>>> list(myPeriod)[len(list(myPeriod))-3]
+(datetime.datetime(2015, 3, 9, 0, 0), datetime.datetime(2015, 3, 16, 0, 0), '1 - Mon, Mar 09 2015')
+>>> list(myPeriod)[len(list(myPeriod))-2]
+(datetime.datetime(2015, 3, 16, 0, 0), datetime.datetime(2015, 3, 23, 0, 0), '1 - Mon, Mar 16 2015')
+>>> list(myPeriod)[len(list(myPeriod))-1]
+(datetime.datetime(2015, 3, 23, 0, 0), datetime.datetime(2015, 3, 27, 6, 23, 1), '1 - Mon, Mar 23 2015')
+
+>>> begin = datetime.datetime(2015, 1,1, 0,30,0) # Jan 1, 2015 12:30:00
+>>> end = datetime.datetime(2015,5, 2,6,23,1) # Jan 2, 2015 6:23:01 AM
+>>> period = 'month'
+>>> myPeriod = trendReportPeriod(begin=begin,end=end,period=period)
+>>> myPeriod.period
+'month'
+>>> list(myPeriod)[0]
+(datetime.datetime(2015, 1, 1, 0, 30), datetime.datetime(2015, 2, 1, 0, 0), '01 - Jan 2015')
+>>> list(myPeriod)[1]
+(datetime.datetime(2015, 2, 1, 0, 0), datetime.datetime(2015, 3, 1, 0, 0), '02 - Feb 2015')
+>>> list(myPeriod)[2]
+(datetime.datetime(2015, 3, 1, 0, 0), datetime.datetime(2015, 4, 1, 0, 0), '03 - Mar 2015')
+>>> list(myPeriod)[len(list(myPeriod))-2]
+(datetime.datetime(2015, 4, 1, 0, 0), datetime.datetime(2015, 5, 1, 0, 0), '04 - Apr 2015')
+>>> list(myPeriod)[len(list(myPeriod))-1]
+(datetime.datetime(2015, 5, 1, 0, 0), datetime.datetime(2015, 5, 2, 6, 23, 1), '05 - May 2015')
+
+>>> begin = datetime.datetime(2010, 1,1, 0,30,0) # Jan 1, 2015 12:30:00
+>>> end = datetime.datetime(2015,5, 2,6,23,1) # Jan 2, 2015 6:23:01 AM
+>>> period = 'year'
+>>> myPeriod = trendReportPeriod(begin=begin,end=end,period=period)
+>>> myPeriod.period
+'year'
+>>> list(myPeriod)[0]
+(datetime.datetime(2010, 1, 1, 0, 30), datetime.datetime(2011, 1, 1, 0, 0), '2010')
+>>> list(myPeriod)[1]
+(datetime.datetime(2011, 1, 1, 0, 0), datetime.datetime(2012, 1, 1, 0, 0), '2011')
+>>> list(myPeriod)[len(list(myPeriod))-2]
+(datetime.datetime(2014, 1, 1, 0, 0), datetime.datetime(2015, 1, 1, 0, 0), '2014')
+>>> list(myPeriod)[len(list(myPeriod))-1]
+(datetime.datetime(2015, 1, 1, 0, 0), datetime.datetime(2015, 5, 2, 6, 23, 1), '2015')
+
+>>> begin = datetime.datetime(2015,1,1,0,30,5) # Jan 1, 2015 12:30:05
+>>> end = datetime.datetime(2015,1,8,6,23,1) # Jan 8, 2015 6:23:01 AM
+>>> period = datetime.timedelta(days=1, hours=12)
+>>> myPeriod = trendReportPeriod(begin=begin,end=end,period=period)
+>>> myPeriod.period
+datetime.timedelta(1, 43200)
+>>> list(myPeriod)[0]
+(datetime.datetime(2015, 1, 1, 0, 30, 5), datetime.datetime(2015, 1, 2, 12, 30, 5), '1')
+>>> list(myPeriod)[1]
+(datetime.datetime(2015, 1, 2, 12, 30, 5), datetime.datetime(2015, 1, 4, 0, 30, 5), '2')
+>>> list(myPeriod)[len(list(myPeriod))-1]
+(datetime.datetime(2015, 1, 7, 0, 30, 5), datetime.datetime(2015, 1, 8, 6, 23, 1), '5')

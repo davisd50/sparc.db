@@ -1,0 +1,19 @@
+================
+SQL
+================
+================
+Configure ZCA
+================
+    >>> from sparc.common import Configure
+    >>> import sparc.db
+    >>> Configure([sparc.db, (sparc.db, 'memory.zcml')])
+
+================
+Confirm session provides marker interface
+================
+    >>> from sparc.db import ISqlAlchemySession
+    >>> from z3c.saconfig import named_scoped_session
+    >>> Session = named_scoped_session('memory_session')
+    >>> session = Session()
+    >>> ISqlAlchemySession.providedBy(session)
+    True

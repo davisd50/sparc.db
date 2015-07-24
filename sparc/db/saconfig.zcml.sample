@@ -1,0 +1,11 @@
+<configure xmlns="http://namespaces.zope.org/db">
+    <!--
+    saconfig allows us to configure DB engine connections via ZCML.  Take
+    a look at the z3c.saconfig online documentation on the appropriate
+    formatting of this configuration.
+    
+    You will need to create a saconfig.zcml appropriate for your application
+    to enable ZCA component lookups to work.
+    -->
+    <engine name="mySqlAlchemyEngineForSqliteMemoryOnlyDb" url="sqlite:///:memory:" />
+</configure>
