@@ -7,11 +7,11 @@
     use-cases (such as unit testing).
     
     Usage:
-        >>> import zope.configuration.xmlconfig
-        >>> import gesecurity.db
+        >>> import sparc.db
+        >>> from sparc.common import Configure
         >>> from zope.component import getUtility
         >>> from z3c.saconfig.interfaces import IEngineFactory, IScopedSession
-        >>> zope.configuration.xmlconfig.XMLConfig('memory.zcml', gesecurity.db)()
+        >>> Configure((sparc.db, 'memory.zcml',))
         >>> myEngine = getUtility(IEngineFactory, name="memory_engine")
         >>> mySession = getUtility(IScopedSession, name="memory_session")
     -->

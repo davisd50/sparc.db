@@ -5,7 +5,7 @@ version = '0.0.1'
 
 setup(name='sparc.db',
       version=version,
-      description="",
+      description="Database interaction utilities for the SPARC platform",
       long_description=open("README.md").read() + "\n" +
                        open(os.path.join("docs", "HISTORY.txt")).read(),
       # Get more strings from
@@ -13,11 +13,12 @@ setup(name='sparc.db',
       classifiers=[
         "Programming Language :: Python",
         ],
-      keywords='',
-      author='',
-      author_email='',
+      keywords=['zca'],
+      author='David Davis',
+      author_email='davisd50@gmail.com',
       url='https://github.com/davisd50/sparc.db',
-      license='GPL',
+      download_url = '',
+      license='MIT',
       packages=find_packages(exclude=['ez_setup']),
       namespace_packages=['sparc'],
       include_package_data=True,
