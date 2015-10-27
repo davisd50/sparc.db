@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '0.0.1'
+version = '0.0.2'
 
 setup(name='sparc.db',
       version=version,
@@ -11,8 +11,13 @@ setup(name='sparc.db',
       # Get more strings from
       # http://pypi.python.org/pypi?:action=list_classifiers
       classifiers=[
-        "Programming Language :: Python",
-        ],
+        'Development Status :: 2 - Pre-Alpha',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: MIT License',
+        'Natural Language :: English',
+        "Programming Language :: Python :: 2",
+        'Programming Language :: Python :: 2.7',
+      ],
       keywords=['zca'],
       author='David Davis',
       author_email='davisd50@gmail.com',
