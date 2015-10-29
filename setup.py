@@ -1,13 +1,13 @@
 from setuptools import setup, find_packages
 import os
 
-version = '0.0.2'
+version = '0.0.3'
 
 setup(name='sparc.db',
       version=version,
       description="Database interaction utilities for the SPARC platform",
       long_description=open("README.md").read() + "\n" +
-                       open(os.path.join("docs", "HISTORY.txt")).read(),
+                       open("HISTORY.txt").read(),
       # Get more strings from
       # http://pypi.python.org/pypi?:action=list_classifiers
       classifiers=[
