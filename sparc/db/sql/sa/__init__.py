@@ -8,13 +8,12 @@ from interfaces import ISqlAlchemyDeclarativeBase
 Base = declarative_base()
 alsoProvides(Base, [ISqlAlchemyDeclarativeBase])
 
-class sparcBaseMySqlMixin(object):
+class sparcBaseMixin(object):
     
     @declared_attr
     def __tablename__(cls):
         return cls.__name__.lower()
     
-    __table_args__ = {'mysql_engine': 'InnoDB'}
     __mapper_args__= {'always_refresh': True}
     
     def __repr__(self):
@@ -23,6 +22,9 @@ class sparcBaseMySqlMixin(object):
         except KeyError:
             _id = None
         return "<" + self.__class__.__name__ + "(id: '%s')>" % (str(_id))
+
+class sparcBaseMySqlMixin(sparcBaseMixin):
+    __table_args__ = {'mysql_engine': 'InnoDB'}
 
 class EngineRequired(object):
     """Decorator for callables that are dependent on a SQLite SQLAlchemy engine
