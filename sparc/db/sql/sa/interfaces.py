@@ -1,4 +1,7 @@
 from zope.interface import Interface
 
 class ISqlAlchemySession(Interface):
-    """Marker interface for SQL Alchemy session class"""
+    """Marker for a session"""
+
+class ISqlAlchemyDeclarativeBase(Interface):
+    """Marker for a declarative base"""

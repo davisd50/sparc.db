@@ -5,12 +5,17 @@
     
     <include package="z3c.saconfig" file="meta.zcml" /> <!-- ZCML directives -->
 
-    <!--
-    Provide marker interface to all instances of SQL Alchemy Sessions to allow
-    component lookups.
+    <!--Markers for SQL Alchemy components
     -->
     <class class="sqlalchemy.orm.session.Session">
       <implements interface=".ISqlAlchemySession" />
     </class>
+    
+    <!--A declarative base singleton
+    -->
+    <utility
+        provides=".ISqlAlchemyDeclarativeBase"
+        component=".Base"
+        />
     
 </configure>

@@ -1,10 +1,14 @@
+from zope.interface import alsoProvides
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
 from interfaces import ISqlAlchemySession
+from interfaces import ISqlAlchemyDeclarativeBase
 
 # Class to act as a Base for all ORM-based SQLAlchemy mappings
-Base = declarative_base()
 
-class sparcBaseMixin(object):
+Base = declarative_base()
+alsoProvides(Base, [ISqlAlchemyDeclarativeBase])
+
+class sparcBaseMySqlMixin(object):
     
     @declared_attr
     def __tablename__(cls):
