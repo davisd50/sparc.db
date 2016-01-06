@@ -6,12 +6,13 @@ Configure ZCA
 ================
     >>> from sparc.common import Configure
     >>> import sparc.db
-    >>> Configure([sparc.db, (sparc.db, 'memory.zcml')])
+    >>> import sparc.db.sql.sa
+    >>> Configure([sparc.db, (sparc.db.sql.sa, 'memory.zcml')])
 
 ================
 Confirm session provides marker interface
 ================
-    >>> from sparc.db import ISqlAlchemySession
+    >>> from sparc.db.sql.sa import ISqlAlchemySession
     >>> from z3c.saconfig import named_scoped_session
     >>> Session = named_scoped_session('memory_session')
     >>> session = Session()

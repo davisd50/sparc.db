@@ -1,6 +1,5 @@
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
-
-from sparc.db import ISqlAlchemySession
+from interfaces import ISqlAlchemySession
 
 # Class to act as a Base for all ORM-based SQLAlchemy mappings
 Base = declarative_base()
@@ -32,7 +31,7 @@ class EngineRequired(object):
     Usage:
         Define a class that is decorated with EngineRequired().
         
-        >>> from sparc.db import EngineRequired
+        >>> from sparc.db.sql.sa import EngineRequired
         >>> @EngineRequired('sqlite','oracle')
         ... class myTestClass(object):
         ...     def __init__(self, aSessionArg):
@@ -46,12 +45,13 @@ class EngineRequired(object):
         
         >>> from sparc.common import Configure
         >>> import sparc.db
-        >>> Configure([sparc.db, (sparc.db, 'memory.zcml')])
+        >>> import sparc.db.sql.sa
+        >>> Configure([sparc.db, (sparc.db.sql.sa, 'memory.zcml')])
         >>> from z3c.saconfig import named_scoped_session
         >>> Session = named_scoped_session('memory_session')
         >>> session = Session()
         
-        >>> from sparc.db import ISqlAlchemySession
+        >>> from sparc.db.sql.sa import ISqlAlchemySession
         >>> ISqlAlchemySession.providedBy(session)
         True
         

@@ -2,9 +2,7 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:i18n="http://namespaces.zope.org/i18n"
     i18n_domain="sparc.db">
-
-    <include package=".report" />
-    <include package=".sql" />
-
     
+    <include package=".sa" />
+
 </configure>

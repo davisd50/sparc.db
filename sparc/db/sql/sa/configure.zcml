@@ -1,0 +1,16 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    i18n_domain="sparc.db">
+    
+    <include package="z3c.saconfig" file="meta.zcml" /> <!-- ZCML directives -->
+
+    <!--
+    Provide marker interface to all instances of SQL Alchemy Sessions to allow
+    component lookups.
+    -->
+    <class class="sqlalchemy.orm.session.Session">
+      <implements interface=".ISqlAlchemySession" />
+    </class>
+    
+</configure>
