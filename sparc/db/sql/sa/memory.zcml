@@ -13,7 +13,8 @@
         >>> from z3c.saconfig.interfaces import IEngineFactory, IScopedSession
         >>> Configure((sparc.db.sql.sa, 'memory.zcml',))
         >>> myEngine = getUtility(IEngineFactory, name="memory_engine")
-        >>> mySession = getUtility(IScopedSession, name="memory_session")
+        >>> sa_session_util = getUtility(IScopedSession, name="memory_session")
+        >>> session = sa_session_util.sessionFactory()
     -->
     <engine name="memory_engine" url="sqlite:///:memory:" />
     <session name="memory_session" engine="memory_engine" />
