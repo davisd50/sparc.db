@@ -10,6 +10,9 @@
     <class class="sqlalchemy.orm.session.Session">
       <implements interface=".ISqlAlchemySession" />
     </class>
+    <class class="z3c.saconfig.utility.GloballyScopedSession">
+      <implements interface=".ISqlAlchemySession" />
+    </class>
     
     <!--A declarative base singleton
     -->
