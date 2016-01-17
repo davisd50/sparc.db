@@ -1,5 +1,3 @@
-"""Test pwsecurity.sc.cache.corp_3pc_tracker module.
-"""
 import unittest
 from doctest import DocTestSuite
 
