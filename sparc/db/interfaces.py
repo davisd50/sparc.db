@@ -2,6 +2,8 @@ from zope.interface import Interface
 from zope import schema
 from sparc.event import IEvent
 
+from sparc.db import MessageFactory as _
+
 #DB Query String
 class IQuery(Interface):
     """A database query"""

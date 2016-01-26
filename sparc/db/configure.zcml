@@ -5,6 +5,13 @@
 
     <include package=".report" />
     <include package=".sql" />
+    
+    <!--Factory for IQuery
+    -->
+    <utility
+    	component=".query.dbQueryFactory"
+    	name="sparc.db.query"
+    	/>
 
     
 </configure>

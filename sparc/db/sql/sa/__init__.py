@@ -49,7 +49,7 @@ class EngineRequired(object):
         yourself via zope.interface.directlyProvides().  We'll grab our ready-made
         session for this example that uses a sqlite memory-only db.
         
-        >>> from sparc.common import Configure
+        >>> from sparc.configuration.zcml import Configure
         >>> import sparc.db
         >>> import sparc.db.sql.sa
         >>> Configure([sparc.db, (sparc.db.sql.sa, 'memory.zcml')])

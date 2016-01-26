@@ -27,9 +27,8 @@ ZCA Factory
 It is best to use this class as a ZCA utility.  To use ZCA, we first need to
 configure the components.
 
->>> from sparc.common import Configure
->>> import sparc.db
->>> Configure(sparc.db)
+>>> from sparc.db import Configure
+>>> Configure()
 
 We can now retrieve the iterator via component lookup, specifically we'll
 use zope.component.createObject to return instances from the factory.

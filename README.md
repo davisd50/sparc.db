@@ -13,7 +13,7 @@ provided to allow connection configuration andintegration of SQLAlchemy in ZCA.
     These steps will give you access to a SQLAlchemy session, see the SQLAlchemy
     docs to understand how to interact with this object.
     >>> import sparc.db
-    >>> from sparc.common import Configure
+    >>> from sparc.configuration.zcml import Configure
     >>> from zope.component import getUtility
     >>> from z3c.saconfig.interfaces import IEngineFactory, IScopedSession
     >>> Configure((sparc.db, 'memory.zcml',))

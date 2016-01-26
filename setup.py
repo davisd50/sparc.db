@@ -35,7 +35,8 @@ setup(name='sparc.db',
           'setuptools',
           'SQLAlchemy',
           'z3c.saconfig',
-          'sparc.common'
+          'sparc.configuration',
+          'sparc.i18n'
           # -*- Extra requirements: -*-
       ],
       entry_points="""
