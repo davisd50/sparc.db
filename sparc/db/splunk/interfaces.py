@@ -1,4 +1,4 @@
-from sparc.db import IQuery
+from zope.interface import Interface
 
-class ISplunkQuery(IQuery):
-    """A Splunk query"""
+class ISplunkQuery(Interface):
+    """Marker for a Splunk query"""

@@ -1,1 +1,1 @@
-from interfaces import IQuery
+from interfaces import ISplunkQuery

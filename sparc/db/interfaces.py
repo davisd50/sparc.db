@@ -1,7 +1,8 @@
 from zope.interface import Interface
 from zope import schema
+from sparc.event import IEvent
 
-#DB Query
+#DB Query String
 class IQuery(Interface):
     """A database query"""
     query = schema.Text(
@@ -39,3 +40,7 @@ class ITableResultMultiValue(Interface):
     """A value for a ITableResult key that allows for multi-value fields"""
     def __iter__():
         """Iterator of unicode capable values"""
+
+#DB Query Event
+class IQueryEvent(IEvent, IQueryResultSet):
+    """A point-in-time executed query with results"""
