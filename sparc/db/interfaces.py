@@ -22,9 +22,9 @@ class IQueryResultSet(IQuery):
 class IResult(Interface):
     """A single database query result (i.e. a row)"""
 
-class ITableResult(IResult):
+class ITabularResult(IResult):
     """A single database query result represented as a Python dictionary whose
-    key values are instances of ITableResultMultiValue or ITableResultValue
+    key values are instances of ITabularResultMultiValue or ITabularResultValue
 
     Sample implementation:
         >>> from zope.interface import implements
@@ -33,13 +33,13 @@ class ITableResult(IResult):
     """
 
 #DB Query Result Values
-class ITableResultValue(Interface):
+class ITabularResultValue(Interface):
     """A value from a database query result (i.e. a table cell)"""
     def __unicode__():
         """Return unicode string representation of value"""
 
-class ITableResultMultiValue(Interface):
-    """A value for a ITableResult key that allows for multi-value fields"""
+class ITabularResultMultiValue(Interface):
+    """A value for a ITabularResult key that allows for multi-value fields"""
     def __iter__():
         """Iterator of unicode capable values"""
 
