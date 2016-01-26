@@ -4,6 +4,7 @@
     i18n_domain="sparc.db">
 
     <include package=".report" />
+    <include package=".splunk" />
     <include package=".sql" />
     
     <!--Factory for IQuery

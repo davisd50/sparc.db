@@ -1,0 +1,29 @@
+Splunk query, result, and value components
+---------------------------------------------
+These components are used to interact with the Splunk API.
+
+As always, we first need to configure the ZCA registry before we can use the
+components
+
+>>> from sparc.db import Configure
+>>> Configure()
+
+A Query
+--------
+A query is a simple interface used to store a string that can be used to 
+query a database.
+
+>>> from zope.component import createObject
+>>> query = createObject(u"sparc.db.splunk.query", u"a simple query string")
+
+>>> from sparc.db.splunk import ISplunkQuery
+>>> ISplunkQuery.providedBy(query)
+True
+
+Query strings need to be unicode
+>>> from zope.schema import ValidationError
+>>> try:
+...     createObject(u"sparc.db.splunk.query", "an invalid non-unicode string")
+...     assert False
+... except ValidationError:
+...     pass
