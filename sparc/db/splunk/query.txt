@@ -27,3 +27,36 @@ Query strings need to be unicode
 ...     assert False
 ... except ValidationError:
 ...     pass
+
+Splunk Query Result Set
+------------------------
+A result set is an iterator for a set of Splunk search results.
+
+Create a mock response stream of Splunk XML data
+>>> from sparc.db.splunk import ISplunkResultsStream
+>>> import sparc.db.splunk.tests
+>>> import os
+>>> response_file_path = os.path.join(sparc.db.splunk.tests.__path__[0], 
+... 									"splunk_job_result_stream_sample.xml")
+>>> response = file(response_file_path)
+
+Get the result set via adaptation.  Normally, this would be done via the
+Interface call sparc.db.IQueryResultSet(), but in our test case this won't
+work because the response object does not (and can not) provide the required
+sparc.db.splunk.ISplunkResultsStream interface.  So instead, we'll call the
+adapter directly
+>>> from sparc.db.splunk.query import QueryResultSetForSplunk
+>>> result_set = QueryResultSetForSplunk(response)
+>>> result_list = list(result_set)
+>>> len(result_list)
+2
+>>> entry = result_list[0]
+
+Now lets test the entry to make sure it acts as expected, here's a standard entry
+>>> entry['identity']
+'user1'
+
+Here's a multi-value entry
+>>> list(entry['Login_Time'])
+['01/20/2016 10:52:22', '01/20/2016 10:52:31', '01/20/2016 10:52:32']
+

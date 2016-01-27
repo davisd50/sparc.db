@@ -29,3 +29,31 @@ Query strings need to be unicode
 ...     assert False
 ... except ValidationError:
 ...     pass
+
+A Result Value
+---------------
+A result value is the value associated with a single query result.  For
+tabular databases, this would be the value of a single cell (that does not
+contain a multi-value attribute).
+
+we'll just test our factory and the provided interface
+>>> from sparc.db import IResultValue
+>>> my_value = createObject(u'sparc.db.result_value', u'this is a value')
+>>> my_value
+'this is a value'
+>>> unicode(my_value)
+u'this is a value'
+>>> IResultValue.providedBy(my_value)
+True
+
+A Result Multi-value
+---------------------
+Some query results might contains a multi-value.
+
+>>> from sparc.db import IResultMultiValue
+>>> my_multi_value = createObject(u'sparc.db.result_multi_value',
+... 				[u'value 1', u'value 2'])
+>>> list(my_multi_value)
+['value 1', 'value 2']
+>>> IResultMultiValue.providedBy(my_multi_value)
+True

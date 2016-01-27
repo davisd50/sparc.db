@@ -14,8 +14,8 @@ class IQuery(Interface):
             )
 
 #DB Query Results
-class IQueryResultSet(IQuery):
-    """A database query with results"""
+class IQueryResultSet(Interface):
+    """A database query with ordered results"""
     def __iter__():
         """Iterator of IResult objects"""
 
@@ -33,15 +33,15 @@ class ITabularResult(IResult):
     """
 
 #DB Query Result Values
-class ITabularResultValue(Interface):
+class IResultValue(Interface):
     """A value from a database query result (i.e. a table cell)"""
     def __unicode__():
         """Return unicode string representation of value"""
 
-class ITabularResultMultiValue(Interface):
-    """A value for a ITabularResult key that allows for multi-value fields"""
+class IResultMultiValue(Interface):
+    """A value from a database query result that allows for multi-value fields"""
     def __iter__():
-        """Iterator of unicode capable values"""
+        """Iterator of unicode capable ordered values"""
 
 #DB Query Event
 class IQueryEvent(IEvent, IQueryResultSet):

@@ -1,0 +1,20 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    i18n_domain="sparc.db">
+    
+    <!--Factory for ISplunkQuery
+    -->
+    <utility
+    	component=".query.splunkQueryFactory"
+    	name="sparc.db.splunk.query"
+    	/>
+    
+    <adapter
+    	for=".ISplunkResultsStream"
+    	provides="sparc.db.IQueryResultSet"
+    	factory=".query.QueryResultSetForSplunk"
+    	/>
+
+    
+</configure>

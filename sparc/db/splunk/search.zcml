@@ -1,0 +1,28 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    i18n_domain="sparc.db">
+    
+    <!--IFactory for Splunk Connection Info
+    -->
+    <utility
+        component=".search.splunk_connection_info_factory"
+        name="sparc.db.splunk.splunk_connection_info_factory"
+        />
+
+    <!--IFactory for Splunk Saved Search Query filter
+    -->
+    <utility
+        component=".search.splunk_saved_search_query_filter_factory"
+        name="sparc.db.splunk.splunk_saved_search_query_filter_factory"
+        />
+
+    <!--IFactory for Splunk Saved Searches
+    -->
+    <utility
+        component=".search.saved_searches_factory"
+        name="sparc.db.splunk.saved_searches_factory"
+        />
+
+    
+</configure>

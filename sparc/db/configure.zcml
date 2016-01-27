@@ -13,6 +13,19 @@
     	component=".query.dbQueryFactory"
     	name="sparc.db.query"
     	/>
-
+    
+    <!--Factory for IResultValue
+    -->
+    <utility
+    	component=".query.resultValueFactory"
+    	name="sparc.db.result_value"
+    	/>
+    
+    <!--Factory for IResultMultiValue
+    -->
+    <utility
+    	component=".query.resultMultiValueFactory"
+    	name="sparc.db.result_multi_value"
+    	/>
     
 </configure>

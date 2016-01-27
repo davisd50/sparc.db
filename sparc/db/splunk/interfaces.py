@@ -4,6 +4,10 @@ from sparc.db import IQuery
 class ISplunkQuery(IQuery):
     """A Splunk query"""
 
+class ISplunkResultsStream(Interface):
+    """A Splunk job results stream handle"""
+    def read():
+        """Reads stream and advances pointer"""
 
 class ISplunkSavedSearches(Interface):
     """Marker for splunklib.client.SavedSearches"""

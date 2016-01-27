@@ -1,4 +1,5 @@
 from interfaces import ISplunkConnectionInfo
 from interfaces import ISplunkQuery
+from interfaces import ISplunkResultsStream
 from interfaces import ISplunkSavedSearches
 from interfaces import ISplunkSavedSearchQueryFilter
