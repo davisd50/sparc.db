@@ -1,10 +1,12 @@
 from zope.component import createObject
 from zope.component.factory import Factory
 from zope.interface import implements
+from zope.schema import ValidationError
 from zope.schema.fieldproperty import FieldProperty
 from sparc.event import SparcEvent
 from interfaces import IQuery
 from interfaces import IQueryEvent
+from interfaces import IQueryResultSet
 from interfaces import IResultValue
 from interfaces import IResultMultiValue
 
@@ -62,6 +64,8 @@ class QueryEvent(SparcEvent):
         """
         super(QueryEvent, self).__init__(*args, **kwargs)
         self.query = kwargs['query'].query
+        if not IQueryResultSet.providedBy(kwargs['results']):
+            raise ValidationError('expected IQueryResultSet for results, got: {}'.format("'" + str(kwargs['results']) + "'"))
         self.results = kwargs['results']
     
     #IQuery
