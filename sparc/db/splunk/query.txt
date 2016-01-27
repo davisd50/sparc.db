@@ -53,10 +53,17 @@ adapter directly
 >>> entry = result_list[0]
 
 Now lets test the entry to make sure it acts as expected, here's a standard entry
+>>> from sparc.db import ITabularResult, IResultValue, IResultMultiValue
 >>> entry['identity']
 'user1'
+>>> ITabularResult.providedBy(entry)
+True
+>>> IResultValue.providedBy(entry['identity'])
+True
 
 Here's a multi-value entry
 >>> list(entry['Login_Time'])
 ['01/20/2016 10:52:22', '01/20/2016 10:52:31', '01/20/2016 10:52:32']
+>>> IResultMultiValue.providedBy(entry['Login_Time'])
+True
 
