@@ -2,7 +2,9 @@ from zope.component import createObject
 from zope.component.factory import Factory
 from zope.interface import implements
 from zope.schema.fieldproperty import FieldProperty
+from sparc.event import SparcEvent
 from interfaces import IQuery
+from interfaces import IQueryEvent
 from interfaces import IResultValue
 from interfaces import IResultMultiValue
 
@@ -45,3 +47,29 @@ class ResultMultiValue(object):
             yield createObject(u'sparc.db.result_value', value)
 
 resultMultiValueFactory = Factory(ResultMultiValue)
+
+class QueryEvent(SparcEvent):
+    """A point-in-time executed query with results"""
+    implements(IQueryEvent)
+    
+    def __init__(self, *args, **kwargs):
+        """Object init
+        
+        Kwargs:
+            [see sparc.event.event.SparcEvent]
+            query: IQuery object
+            results: IQueryResultSet object
+        """
+        super(QueryEvent, self).__init__(*args, **kwargs)
+        self.query = kwargs['query'].query
+        self.results = kwargs['results']
+    
+    #IQuery
+    query =  FieldProperty(IQuery['query'])
+    
+    #IQueryResultSet
+    def __iter__(self):
+        for result in self.results:
+            yield result
+
+queryEventFactory = Factory(QueryEvent)

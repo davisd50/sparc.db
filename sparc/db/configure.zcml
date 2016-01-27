@@ -28,4 +28,11 @@
     	name="sparc.db.result_multi_value"
     	/>
     
+    <!--Factory for IQueryEvent
+    -->
+    <utility
+    	component=".query.queryEventFactory"
+    	name="sparc.db.query_event"
+    	/>
+    
 </configure>

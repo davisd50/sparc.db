@@ -44,5 +44,5 @@ class IResultMultiValue(Interface):
         """Iterator of unicode capable ordered values"""
 
 #DB Query Event
-class IQueryEvent(IEvent, IQueryResultSet):
+class IQueryEvent(IEvent, IQuery, IQueryResultSet):
     """A point-in-time executed query with results"""
