@@ -66,13 +66,10 @@ we'll need to simulate results.  This requires some implementation of
 IQueryResultSet, we'll use the sparc.db.splunk package for this purpose.
 
 First, let's create our results set
->>> from sparc.db.splunk.query import QueryResultSetForSplunk
->>> import sparc.db.splunk.tests
->>> import os
->>> response_file_path = os.path.join(sparc.db.splunk.tests.__path__[0], 
-... 									"splunk_job_result_stream_sample.xml")
->>> response = file(response_file_path)
->>> results = QueryResultSetForSplunk(response) #provides IQueryResultSet
+>>> from sparc.db import IQueryResultSet
+>>> from sparc.db.splunk.tests import mock_result_stream
+>>> response = mock_result_stream()
+>>> results = IQueryResultSet(response)
 
 We can now start to create our required kwargs for a query event creation, we
 start with the query and results
