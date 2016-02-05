@@ -1,6 +1,7 @@
 from zope.component import createObject
 from zope.component.factory import Factory
 from zope.interface import implements
+from zope import schema
 from zope.schema import ValidationError
 from zope.schema.fieldproperty import FieldProperty
 from sparc.event import SparcEvent
@@ -67,6 +68,13 @@ class QueryEvent(SparcEvent):
         if not IQueryResultSet.providedBy(kwargs['results']):
             raise ValidationError('expected IQueryResultSet for results, got: {}'.format("'" + str(kwargs['results']) + "'"))
         self.results = kwargs['results']
+
+    results = FieldProperty(
+                    schema.Field(
+                            title = u'IQueryResultSet',
+                            constraint = lambda v:IQueryResultSet.providedBy(v)
+                        )
+                )
     
     #IQuery
     query =  FieldProperty(IQuery['query'])
