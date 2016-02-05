@@ -55,7 +55,7 @@ class QueryEvent(SparcEvent):
     """A point-in-time executed query with results"""
     implements(IQueryEvent)
     
-    def __init__(self, *args, **kwargs):
+    def __init__(self, **kwargs):
         """Object init
         
         Kwargs:
@@ -63,19 +63,12 @@ class QueryEvent(SparcEvent):
             query: IQuery object
             results: IQueryResultSet object
         """
-        super(QueryEvent, self).__init__(*args, **kwargs)
+        super(QueryEvent, self).__init__(**kwargs)
         self.query = kwargs['query'].query
         if not IQueryResultSet.providedBy(kwargs['results']):
             raise ValidationError('expected IQueryResultSet for results, got: {}'.format("'" + str(kwargs['results']) + "'"))
         self.results = kwargs['results']
 
-    results = FieldProperty(
-                    schema.Field(
-                            title = u'IQueryResultSet',
-                            constraint = lambda v:IQueryResultSet.providedBy(v)
-                        )
-                )
-    
     #IQuery
     query =  FieldProperty(IQuery['query'])
     

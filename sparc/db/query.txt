@@ -80,7 +80,7 @@ and sparc.entity.IEntity interfaces as well.
 
 >>> from datetime import datetime
 >>> kwargs['datetime'] = datetime(2016, 1, 1, 0, 0)
->>> kwargs['id'] = hash(query.query + str(kwargs['datetime']))
+>>> kwargs['id'] = str(hash(query.query + str(kwargs['datetime'])))
 >>> kwargs['name'] = u'A query event'
 >>> kwargs['description'] = u'A query event description'
 
@@ -92,7 +92,7 @@ True
 
 Let's check our object's functions
 >>> query_event.getId()
--1697405257974171195
+'-1697405257974171195'
 >>> query_event.name
 u'A query event'
 >>> query_event.query
