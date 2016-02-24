@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<configuration>
+    <sparc>
+    	<db>
+    		<zodb config_url='/path/to/zodb/config/file' />
+    	</db>
+    </sparc>
+</configuration>

@@ -33,6 +33,7 @@ setup(name='sparc.db',
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'ZODB',
           'SQLAlchemy',
           'z3c.saconfig',
           'splunk-sdk',
