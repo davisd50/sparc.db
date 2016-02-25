@@ -86,6 +86,11 @@ We should now be able to get our db as a factory call
 >>> IZODBDatabase.providedBy(db)
 True
 
+let's grab it again, and make sure the singleton feature works
+>>> db2 = createObject(u'sparc.db.zodb.database_from_config')
+>>> db is db2
+True
+
 Clean left over config and ZODB crud
 >>> db.close()
 >>> os.remove(zodb_path)
