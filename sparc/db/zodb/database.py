@@ -31,12 +31,9 @@ class zodbDatabaseFromConfigHelper(object):
     def __new__(self):
         url = None
         xml_config = getUtility(IAppElementTreeConfig)
-        sparc = xml_config.find('sparc')
-        if sparc is not None:
-            db = sparc.find('db')
-            if db is not None:
-                zodb = db.find('zodb')
-                if zodb is not None:
+        for sparc in xml_config.findall('sparc'):
+            for db in sparc.findall('db'):
+                for zodb in db.findall('zodb'):
                     url = zodb.attrib['url']
         if not url:
             raise LookupError('unable to find configuration for sparc::db::zodb::url')
