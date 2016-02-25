@@ -6,7 +6,8 @@ MessageFactory = SparcMessageFactory('sparc.db')
 from importlib import import_module
 from sparc.configuration.zcml import Configure as SparcConfigure
 def Configure():
-    SparcConfigure([import_module(__name__)])
+    SparcConfigure([import_module(__name__),
+                    import_module('sparc.configuration')])
 
 from interfaces import IQuery
 from interfaces import IQueryEvent

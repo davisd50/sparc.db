@@ -6,6 +6,7 @@
     <include package=".report" />
     <include package=".splunk" />
     <include package=".sql" />
+    <include package=".zodb" />
     
     <!--Factory for IQuery
     -->

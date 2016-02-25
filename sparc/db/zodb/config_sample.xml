@@ -2,7 +2,8 @@
 <configuration>
     <sparc>
     	<db>
-    		<zodb config_url='/path/to/zodb/config/file' />
+    	    <!-- See http://www.zodb.org/en/latest/documentation/guide/prog-zodb.html#using-a-zodb-configuration-file -->
+    		<zodb url='/path/to/zodb/config/file' />
     	</db>
     </sparc>
 </configuration>

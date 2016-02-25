@@ -1,0 +1,100 @@
+ZODB Database Access
+---------------------
+We have a registered factory that allows for the creation of a 
+ZODB.interfaces.IDatabse instance from a ZODB configuration spec
+(http://www.zodb.org/en/latest/documentation/guide/prog-zodb.html#using-a-zodb-configuration-file)
+
+Configure registry
+>>> from sparc.db import Configure
+>>> Configure()
+
+Create a tmp directory to store our ZODB file in
+>>> from tempfile import mkdtemp
+>>> tmp_dir_path = mkdtemp()
+
+Get a IDatabase via the registered factory + config string
+>>> from zope.component import createObject
+>>> import os
+>>> zodb_path = os.path.join(tmp_dir_path, 'filestorage.fs')
+>>> db = createObject(u'sparc.db.zodb.database', string=
+... """
+... <zodb>
+...   <filestorage>
+...     path %s
+...   </filestorage>
+... </zodb>
+... """ % zodb_path)
+
+Test the DB to make sure interface is ok
+>>> from sparc.db.zodb import IZODBDatabase
+>>> IZODBDatabase.providedBy(db)
+True
+
+Clean left over ZODB crud
+>>> db.close()
+>>> os.remove(zodb_path)
+>>> os.remove(os.path.join(tmp_dir_path, 'filestorage.fs.index'))
+>>> os.remove(os.path.join(tmp_dir_path, 'filestorage.fs.lock'))
+>>> os.remove(os.path.join(tmp_dir_path, 'filestorage.fs.tmp'))
+
+Config based ZODB Access
+-------------------------
+To help ease the identification of a ZODB, we've created an integration to the
+sparc.configuration.xml framework that allows relatively easy identification
+of a ZODB config file within a standard SPARC based XML configuration file.
+
+First, we'll need to create a ZODB config file
+>>> from tempfile import mkstemp
+>>> from os import fdopen
+>>> zodb_h, zodb_config_path = mkstemp(dir=tmp_dir_path) # returns tuple(handle, path)
+>>> zodb_f = fdopen(zodb_h,'w') # convert into a Python file object
+>>> zodb_f.write(
+... """<zodb>
+...   <filestorage>
+...     path %s
+...   </filestorage>
+... </zodb>
+... """ % zodb_path)
+>>> zodb_f.close()
+
+Next, we need a SPARC xml-based config file
+>>> from tempfile import mkstemp
+>>> sparc_h, sparc_config_path = mkstemp(dir=tmp_dir_path) # returns tuple(handle, path)
+>>> sparc_f = fdopen(sparc_h,'w') # convert into a Python file object
+>>> sparc_f.write(
+... """<?xml version="1.0"?>
+... <configuration>
+...   <sparc>
+...     <db>
+...       <zodb url='%s' />
+...     </db>
+...   </sparc>
+... </configuration>
+... """ % zodb_config_path)
+>>> sparc_f.close()
+>>> #import pdb; pdb.set_trace()
+
+We need to register our config file
+>>> from sparc.configuration.xml import IAppElementTreeConfig
+>>> from zope.component import getGlobalSiteManager
+>>> app_config = createObject(u'sparc.configuration.xml.app_config', sparc_config_path)
+>>> gsm = getGlobalSiteManager()
+>>> gsm.registerUtility(app_config, IAppElementTreeConfig)
+
+We should now be able to get our db as a factory call
+>>> db = createObject(u'sparc.db.zodb.database_from_config')
+>>> IZODBDatabase.providedBy(db)
+True
+
+Clean left over config and ZODB crud
+>>> db.close()
+>>> os.remove(zodb_path)
+>>> os.remove(os.path.join(tmp_dir_path, 'filestorage.fs.index'))
+>>> os.remove(os.path.join(tmp_dir_path, 'filestorage.fs.lock'))
+>>> os.remove(os.path.join(tmp_dir_path, 'filestorage.fs.tmp'))
+>>> os.remove(zodb_config_path)
+>>> os.remove(sparc_config_path)
+
+
+Remove the temp dir
+>>> os.rmdir(tmp_dir_path)
