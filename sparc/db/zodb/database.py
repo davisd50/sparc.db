@@ -38,8 +38,8 @@ class zodbDatabaseFromConfigHelper(object):
         if not url:
             raise LookupError('unable to find configuration for sparc::db::zodb::url')
         if url not in zodbDatabaseFromConfigHelper.config_map:
-            zodbDatabaseFromConfigHelper.config_map[url] = \
-                            createObject(u'sparc.db.zodb.database', url=url)
+            db = createObject(u'sparc.db.zodb.database', url=url)
+            zodbDatabaseFromConfigHelper.config_map[url] = db
         return zodbDatabaseFromConfigHelper.config_map[url]
 
 zodbFromConfigFactory = Factory(zodbDatabaseFromConfigHelper)
