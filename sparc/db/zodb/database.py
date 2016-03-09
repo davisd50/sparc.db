@@ -28,9 +28,10 @@ zodbDatabaseFactory = Factory(zodbDatabaseFactoryHelper)
 class zodbDatabaseFromConfigHelper(object):
     config_map = {} # {url: IZODBDatabase}
     
-    def __new__(self):
+    def __new__(self, xml_config = None):
         url = None
-        xml_config = getUtility(IAppElementTreeConfig)
+        if not xml_config or not len(xml_config):
+            xml_config = getUtility(IAppElementTreeConfig)
         for sparc in xml_config.findall('sparc'):
             for db in sparc.findall('db'):
                 for zodb in db.findall('zodb'):
@@ -41,5 +42,4 @@ class zodbDatabaseFromConfigHelper(object):
             db = createObject(u'sparc.db.zodb.database', url=url)
             zodbDatabaseFromConfigHelper.config_map[url] = db
         return zodbDatabaseFromConfigHelper.config_map[url]
-
 zodbFromConfigFactory = Factory(zodbDatabaseFromConfigHelper)
