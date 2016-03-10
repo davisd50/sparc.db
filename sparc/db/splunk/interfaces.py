@@ -9,6 +9,9 @@ class ISplunkResultsStream(Interface):
     def read():
         """Reads stream and advances pointer"""
 
+class ISplunkJob(Interface):
+    """Marker for splunklib.client.Job"""
+
 class ISplunkSavedSearches(Interface):
     """Marker for splunklib.client.SavedSearches"""
 

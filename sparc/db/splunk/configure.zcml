@@ -6,16 +6,22 @@
     <include file="query.zcml" />
     <include file="search.zcml" />
     
-    <!--Mark splunklib.client.SavedSearches() objects
+    <!--Mark splunklib.client.Job() objects
     -->
-    <class class="splunklib.client.SavedSearches">
-      <implements interface=".ISplunkSavedSearches" />
+    <class class="splunklib.client.Job">
+      <implements interface=".ISplunkJob" />
     </class>
     
     <!--Mark splunklib.client.SavedSearch() objects
     -->
     <class class="splunklib.client.SavedSearch">
       <implements interface=".ISplunkSavedSearch" />
+    </class>
+    
+    <!--Mark splunklib.client.SavedSearches() objects
+    -->
+    <class class="splunklib.client.SavedSearches">
+      <implements interface=".ISplunkSavedSearches" />
     </class>
 
     
