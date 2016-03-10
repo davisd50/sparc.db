@@ -12,6 +12,9 @@ class ISplunkResultsStream(Interface):
 class ISplunkSavedSearches(Interface):
     """Marker for splunklib.client.SavedSearches"""
 
+class ISplunkSavedSearch(Interface):
+    """Marker for splunklib.client.SavedSearche"""
+
 class ISplunkConnectionInfo(Interface):
     """A Python dict for Splunk connection info. see splunklib.client.connect
     

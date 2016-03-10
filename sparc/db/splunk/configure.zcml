@@ -11,6 +11,12 @@
     <class class="splunklib.client.SavedSearches">
       <implements interface=".ISplunkSavedSearches" />
     </class>
+    
+    <!--Mark splunklib.client.SavedSearch() objects
+    -->
+    <class class="splunklib.client.SavedSearch">
+      <implements interface=".ISplunkSavedSearch" />
+    </class>
 
     
 </configure>
