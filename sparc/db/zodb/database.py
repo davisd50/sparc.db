@@ -30,7 +30,7 @@ class zodbDatabaseFromConfigHelper(object):
     
     def __new__(self, xml_config = None):
         url = None
-        if not xml_config or not len(xml_config):
+        if xml_config is None or not len(xml_config):
             xml_config = getUtility(IAppElementTreeConfig)
         for sparc in xml_config.findall('sparc'):
             for db in sparc.findall('db'):
