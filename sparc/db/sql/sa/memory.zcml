@@ -8,10 +8,8 @@
     
     Usage:
         >>> import sparc.db
-        >>> from sparc.common import Configure
         >>> from zope.component import getUtility
         >>> from z3c.saconfig.interfaces import IEngineFactory, IScopedSession
-        >>> Configure((sparc.db.sql.sa, 'memory.zcml',))
         >>> myEngine = getUtility(IEngineFactory, name="memory_engine")
         >>> sa_session_util = getUtility(IScopedSession, name="memory_session")
         >>> session = sa_session_util.sessionFactory()
