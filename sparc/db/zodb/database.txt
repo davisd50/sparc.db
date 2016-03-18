@@ -72,10 +72,10 @@ Next, we need a SPARC xml-based config file
 
 We need to register our config file
 >>> from sparc.configuration.xml import IAppElementTreeConfig
->>> from zope.component import getGlobalSiteManager
+>>> from zope.component import getSiteManager
 >>> app_config = createObject(u'sparc.configuration.xml.app_config', sparc_config_path)
->>> gsm = getGlobalSiteManager()
->>> gsm.registerUtility(app_config, IAppElementTreeConfig)
+>>> sm = getSiteManager()
+>>> sm.registerUtility(app_config, IAppElementTreeConfig)
 
 We should now be able to get our db as a factory call
 >>> db = createObject(u'sparc.db.zodb.database_from_config')
