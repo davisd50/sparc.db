@@ -4,10 +4,6 @@ We have a registered factory that allows for the creation of a
 ZODB.interfaces.IDatabse instance from a ZODB configuration spec
 (http://www.zodb.org/en/latest/documentation/guide/prog-zodb.html#using-a-zodb-configuration-file)
 
-Configure registry
->>> from sparc.db import Configure
->>> Configure()
-
 Create a tmp directory to store our ZODB file in
 >>> from tempfile import mkdtemp
 >>> tmp_dir_path = mkdtemp()

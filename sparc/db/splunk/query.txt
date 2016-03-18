@@ -2,12 +2,6 @@ Splunk query, result, and value components
 ---------------------------------------------
 These components are used to interact with the Splunk API.
 
-As always, we first need to configure the ZCA registry before we can use the
-components
-
->>> from sparc.db import Configure
->>> Configure()
-
 A Query
 --------
 A query is a simple interface used to store a string that can be used to 

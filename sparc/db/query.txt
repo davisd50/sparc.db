@@ -4,12 +4,6 @@ The Sparc toolkit interacts with many different types of data stores.  To help
 ease integration of data from different sources, there are a series of 
 high-level interfaces and components that can be used.
 
-As always, we first need to configure the ZCA registry before we can use the
-components
-
->>> from sparc.db import Configure
->>> Configure()
-
 A Query
 --------
 A query is a simple interface used to store a string that can be used to 

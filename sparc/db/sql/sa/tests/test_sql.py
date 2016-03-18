@@ -1,10 +1,11 @@
 import unittest
-from doctest import DocTestSuite
+from sparc.testing.fixture import test_suite_mixin
 
-import logging, sys
 
-def test_suite():
-    return unittest.TestSuite((DocTestSuite('sparc.db.sql.sa'),))
+class test_suite(test_suite_mixin):
+    package = 'sparc.db.sql.sa'
+    module = ''
+
 
 if __name__ == '__main__':
     unittest.main(defaultTest='test_suite')

@@ -1,15 +1,11 @@
-"""Test
-"""
 import unittest
-from doctest import DocTestSuite
-from doctest import DocFileSuite
+from sparc.testing.fixture import test_suite_mixin
 
-import sparc.db.zodb
 
-def test_suite():
-    return unittest.TestSuite((
-        DocFileSuite('database.txt',
-                     package=sparc.db.zodb),))
+class test_suite(test_suite_mixin):
+    package = 'sparc.db.zodb'
+    module = 'database'
+
 
 if __name__ == '__main__':
     unittest.main(defaultTest='test_suite')

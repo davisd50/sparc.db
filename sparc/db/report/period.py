@@ -5,23 +5,6 @@ from sparc.db.report.interfaces import ITrendReportPeriod
 
 class trendReportPeriod(object):
     """Iterator for time splits between begin/end given a set period
-    
-    Usage:
-        >>> import datetime
-        >>> begin = datetime.datetime(2015,1,1)
-        >>> end   = datetime.datetime(2015,1,10)
-        >>> period = 'day'
-        >>> myPeriodIterator = trendReportPeriod(begin=begin,end=end,period=period)
-        >>> myPeriodIterator.period
-        'day'
-        >>> mySplits = list(myPeriodIterator)
-        >>> mySplits[0]
-        (datetime.datetime(2015,1,1), datetime.datetime(2015,1,2))
-        >>> mySplits[1]
-        (datetime.datetime(2015,1,2), datetime.datetime(2015,1,3))
-        >>> mySplits[9]
-        (datetime.datetime(2015,1,9), datetime.datetime(2015,1,10))
-    
     """
     implements(ITrendReportPeriod)
         

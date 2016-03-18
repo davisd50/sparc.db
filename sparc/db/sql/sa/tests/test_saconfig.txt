@@ -2,14 +2,6 @@
 SQL
 ================
 ================
-Configure ZCA
-================
->>> from sparc.configuration.zcml import Configure
->>> import sparc.db
->>> import sparc.db.sql.sa
->>> Configure([sparc.db, (sparc.db.sql.sa, 'memory.zcml')])
-
-================
 Confirm session provides marker interface
 ================
 >>> from sparc.db.sql.sa import ISqlAlchemySession
