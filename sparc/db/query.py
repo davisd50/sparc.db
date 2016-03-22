@@ -46,8 +46,8 @@ class ResultMultiValue(object):
     #IResultMultiValue
     def __iter__(self):
         """Iterator of unicode capable ordered values"""
-        for value in self.context:
-            yield createObject(u'sparc.db.result_value', value)
+        return iter([createObject(u'sparc.db.result_value', value) for 
+                                                        value in self.context])
 
 resultMultiValueFactory = Factory(ResultMultiValue)
 
@@ -74,7 +74,6 @@ class QueryEvent(SparcEvent):
     
     #IQueryResultSet
     def __iter__(self):
-        for result in self.results:
-            yield result
+        return iter(self.results)
 
 queryEventFactory = Factory(QueryEvent)

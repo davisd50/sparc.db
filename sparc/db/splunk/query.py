@@ -22,16 +22,17 @@ class QueryResultSetForSplunk(object):
     
     def __init__(self, context):
         self.context = context
-        self.reader = ResultsReader(context)
-    
+
     def __iter__(self):
         """Iterator of IResult objects"""
-        for ordered_dict in self.reader:
+        _seq = []
+        for ordered_dict in ResultsReader(self.context):
             for key, value in ordered_dict.iteritems():
                 if isinstance(value, basestring):
                     ordered_dict[key] = createObject(u'sparc.db.result_value', value)
                 else:
                     ordered_dict[key] = createObject(u'sparc.db.result_multi_value', value)
             alsoProvides(ordered_dict, ITabularResult)
-            yield ordered_dict
+            _seq.append(ordered_dict)
+        return iter(_seq)
 
