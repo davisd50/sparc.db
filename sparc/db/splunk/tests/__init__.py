@@ -3,6 +3,14 @@ from importlib import import_module
 from StringIO import StringIO
 from zope.interface import alsoProvides
 from sparc.db.splunk import ISplunkResultsStream
+from sparc.db.splunk.search import SplunkConnectionInfo
+
+splunk_connection_info = SplunkConnectionInfo().update({
+           'host': 'splunk-pso.ec2.beta',
+           'port': '8089',
+           'username': 'pso_reaper1',
+           'password': 'wkUwLzFjDGBZ'
+           })
 
 def mock_result_stream():
     """Return a ISplunkResultsStream from sample data"""

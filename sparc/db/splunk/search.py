@@ -5,6 +5,9 @@ from splunklib.client import connect
 from interfaces import ISplunkConnectionInfo
 from interfaces import ISplunkSavedSearchQueryFilter
 
+from sparc.logging import logging
+logger = logging.getLogger(__name__)
+
 class SplunkConnectionInfo(dict):
     """A Python dict for Splunk connection info. see splunklib.client.connect"""
     implements(ISplunkConnectionInfo)
@@ -29,6 +32,8 @@ def saved_searches_factory_helper(splunk_connection_info):
         DoesNotImplement('argument did not provide expected interface')
     service = connect(**splunk_connection_info)
     saved_searches = service.saved_searches
+    for s in saved_searches:
+        logger.debug("Found Splunk saved search with name %s" % s.name)
     return saved_searches
 
 saved_searches_factory = Factory(saved_searches_factory_helper,
