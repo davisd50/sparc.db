@@ -12,14 +12,13 @@ class SparcDbSplunkSearchTestCase(unittest.TestCase):
 
     def test_connection_failure(self):
         from sparc.db.splunk.tests import splunk_connection_info
-        connect_info = self._get_connect_info(splunk_connection_info)
-        connect_info['password'] = 'bad-password'
+        splunk_connection_info['password'] = 'bad-password'
         
         from splunklib.binding import AuthenticationError
         
         with self.assertRaises(AuthenticationError):
             component.createObject(u'sparc.db.splunk.saved_searches_factory',
-                                                                connect_info)
+                                                        splunk_connection_info)
 
 class test_suite(test_suite_mixin):
     package = 'sparc.db.splunk'
