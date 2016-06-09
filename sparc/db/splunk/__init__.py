@@ -2,6 +2,7 @@ from interfaces import ISplunkConnectionInfo
 from interfaces import ISplunkQuery
 from interfaces import ISplunkResultsStream
 from interfaces import ISplunkJob
+from interfaces import ISplunkKVCollectionSchema
 from interfaces import ISplunkSavedSearch
 from interfaces import ISplunkSavedSearches
 from interfaces import ISplunkSavedSearchQueryFilter

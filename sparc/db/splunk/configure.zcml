@@ -23,6 +23,17 @@
     <class class="splunklib.client.SavedSearches">
       <implements interface=".ISplunkSavedSearches" />
     </class>
+    
+    <adapter
+    	for="zope.interface.Interface"
+    	provides=".ISplunkKVCollectionSchema"
+    	factory=".kvstore.SplunkKVCollectionSchemaFromZopeSchema"
+    	/>
+    
+    <utility
+    	component=".kvstore.splunkKVCollectionSchemaFactory"
+    	name="sparc.db.splunk.kv_collection_schema"
+    	/>
 
     
 </configure>

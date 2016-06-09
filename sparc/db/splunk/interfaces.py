@@ -39,3 +39,18 @@ class ISplunkSavedSearchQueryFilter(Interface):
         ...     implements(ISplunkSavedSearchQueryFilter)
         
     """
+
+class ISplunkKVCollectionSchema(Interface):
+    """A Dict-based Splunk KV Collection schema definition
+    
+    This should be a Python dict whose keys are strings that define Splunk
+    KV collection field names and values define that fields Splunk data type.
+    Other non-attribute fields may be defined as well in the same manor (such
+    as accelerated_fields, etc).
+    
+    
+    Sample implementation:
+        >>> from zope.interface import implements
+        >>> class MySplunkKVSchema(dict):
+        ...     implements(ISplunkKVCollectionSchema)
+    """
