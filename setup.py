@@ -37,7 +37,7 @@ setup(name='sparc.db',
           'SQLAlchemy',
           'z3c.saconfig',
           'splunk-sdk',
-          'zope.schema'
+          'zope.schema',
           'sparc.configuration',
           'sparc.i18n'
           # -*- Extra requirements: -*-
