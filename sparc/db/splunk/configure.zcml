@@ -6,6 +6,11 @@
     <include file="query.zcml" />
     <include file="search.zcml" />
     
+    <utility
+    	component=".kvstore.splunkKVCollectionIdentifierFactory"
+    	name="sparc.db.splunk.kv_collection_identifier"
+    	/>
+    
     <!--Mark splunklib.client.Job() objects
     -->
     <class class="splunklib.client.Job">
@@ -24,6 +29,13 @@
       <implements interface=".ISplunkSavedSearches" />
     </class>
     
+    
+    <adapter
+    	for="sparc.db.splunk.ISplunkConnectionInfo
+    	     sparc.db.splunk.ISPlunkKVCollectionIdentifier"
+    	provides=".ISplunkKVCollectionSchema"
+    	factory=".kvstore.SplunkKVCollectionSchemaFromSplunkInstance"
+    	/>
     <adapter
     	for="zope.interface.Interface"
     	provides=".ISplunkKVCollectionSchema"

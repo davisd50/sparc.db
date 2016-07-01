@@ -1,4 +1,5 @@
 from zope.interface import Interface
+from zope import schema
 from sparc.db import IQuery
 
 class ISplunkQuery(IQuery):
@@ -54,3 +55,9 @@ class ISplunkKVCollectionSchema(Interface):
         >>> class MySplunkKVSchema(dict):
         ...     implements(ISplunkKVCollectionSchema)
     """
+
+class ISPlunkKVCollectionIdentifier(Interface):
+    """An identifier for a Splunk KV Collection end point"""
+    collection = schema.TextLine(title=u"Collection Name")
+    application = schema.TextLine(title=u"Splunk Application Name")
+    username = schema.TextLine(title=u"Splunk Associated User Name")

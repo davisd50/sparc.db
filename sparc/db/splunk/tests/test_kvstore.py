@@ -4,6 +4,7 @@ import zope.testrunner
 from zope import component
 from sparc.testing.fixture import test_suite_mixin
 from sparc.testing.testlayer import SPARC_INTEGRATION_LAYER
+from sparc.db.splunk.testing import SPARC_DB_SPLUNK_INTEGRATION_LAYER
 
 from zope import schema
 from zope.interface import Interface
@@ -75,7 +76,40 @@ class SparcCacheSplunkAreaTestCase(unittest.TestCase):
                                        value_type=schema.List(title=u'bad'))
         sschema = ISplunkKVCollectionSchema(ITestSchemaDict)
         self.assertNotIn('field.list', sschema)
+
+
+
+kv_names = {}
+kv_names['test_collection'] = {}
+kv_names['test_collection']['field.id'] = "string"
+kv_names['test_collection']['field.name'] = "string"
+SPARC_DB_SPLUNK_INTEGRATION_LAYER.kv_names.update(kv_names)
+class SparcDBSplunkKVTestCase(unittest.TestCase):
+    layer = SPARC_DB_SPLUNK_INTEGRATION_LAYER
+    level = 2
+    sm = component.getSiteManager()
     
+    def test_current_kv_names(self):
+        from sparc.db.splunk.kvstore import current_kv_names
+        self.assertIn('test_collection', \
+                      current_kv_names(self.layer.sci,
+                                       self.layer.kv_username,
+                                       self.layer.kv_appname))   
+
+    def test_schema_adapter_for_named_collection(self):
+        # tests SplunkKVCollectionSchemaFromSplunkInstance
+        from sparc.db.splunk import ISplunkKVCollectionSchema
+        kv_id = \
+            component.createObject(\
+                            u"sparc.db.splunk.kv_collection_identifier",
+                            collection=u'test_collection',
+                            application=self.layer.kv_appname,
+                            username=self.layer.kv_username)
+        schema = component.getMultiAdapter((self.layer.sci, kv_id,), 
+                                                ISplunkKVCollectionSchema)
+        for k in self.layer.kv_names['test_collection'].keys():
+            self.assertEquals(self.layer.kv_names['test_collection'][k], schema[k])
+
 class test_suite(test_suite_mixin):
     package = 'sparc.db.splunk'
     module = 'kvstore'
@@ -83,6 +117,7 @@ class test_suite(test_suite_mixin):
     def __new__(cls):
         suite = super(test_suite, cls).__new__(cls)
         suite.addTest(unittest.makeSuite(SparcCacheSplunkAreaTestCase))
+        suite.addTest(unittest.makeSuite(SparcDBSplunkKVTestCase))
         return suite
 
 

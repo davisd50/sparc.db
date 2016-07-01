@@ -1,8 +1,9 @@
+import requests
+import xml.etree.ElementTree as ET
 from zope.component import adapts
 from zope.component.factory import Factory
 from zope.interface import implements
 from zope.interface import Interface
-from zope.schema.interfaces import IField
 from zope.schema.interfaces import ICollection
 from zope.schema.interfaces import IBool
 from zope.schema.interfaces import IDate, IDatetime
@@ -10,11 +11,84 @@ from zope.schema.interfaces import IDecimal, IFloat, IInt
 from zope.schema.interfaces import IDict
 from zope.schema.interfaces import IDottedName
 from zope.schema.interfaces import IText, INativeString
+from zope.schema.fieldproperty import FieldProperty
+from sparc.db.splunk import xml_ns
+from interfaces import ISPlunkKVCollectionIdentifier
 from interfaces import ISplunkKVCollectionSchema
+from interfaces import ISplunkConnectionInfo
+
+def current_kv_names(sci, app_user, app_name):
+    """Return set of string names of current available Splunk KV collections
+    
+    Args:
+        sci: Instance of sparc.db.splunk.ISplunkConnectionInfo
+        app_user: Splunk KV Collection app user to reference
+        app_name: Splunk KV Collection application name to reference
+    Returns:
+        Set of string names for collections found
+    """
+    url = "".join(['https://',sci['host'],':',sci['port'],
+                                    '/servicesNS/',app_user,'/',
+                                                        app_name,'/'])
+    auth = (sci['username'], sci['password'], )
+    _return = set()
+    r = requests.get(url+"storage/collections/config",
+                            auth=auth,
+                            verify=False)
+    r.raise_for_status()
+    root = ET.fromstring(r.text)
+    for entry in root.findall('./atom:entry', xml_ns):
+        name = entry.find('./atom:title', xml_ns).text
+        if not name:
+            raise ValueError('unexpectedly found empty collection title')
+        _return.add(name)
+    return _return
+    
+class SplunkKVCollectionIdentifier(object):
+    implements(ISPlunkKVCollectionIdentifier)
+    
+    def __init__(self, **kwargs):
+        for k in kwargs:
+            setattr(self, k, kwargs[k])
+    collection = FieldProperty(ISPlunkKVCollectionIdentifier['collection'])
+    application = FieldProperty(ISPlunkKVCollectionIdentifier['application'])
+    username = FieldProperty(ISPlunkKVCollectionIdentifier['username'])
+splunkKVCollectionIdentifierFactory = Factory(SplunkKVCollectionIdentifier)
 
 class SplunkKVCollectionSchema(dict):
     implements(ISplunkKVCollectionSchema)
 splunkKVCollectionSchemaFactory = Factory(SplunkKVCollectionSchema)
+
+class SplunkKVCollectionSchemaFromSplunkInstance(dict):
+    implements(ISplunkKVCollectionSchema)
+    adapts(ISplunkConnectionInfo, ISPlunkKVCollectionIdentifier)
+    
+    def __init__(self, sci, kv_id):
+        self.sci = sci
+        self.kv_id = kv_id
+        self.collname = kv_id.collection
+        self.appname = kv_id.application
+        self.username = kv_id.username
+        self.url = "".join(['https://',sci['host'],':',sci['port'],
+                                    '/servicesNS/',self.username,'/',
+                                                        self.appname,'/'])
+        self.auth = (self.sci['username'], self.sci['password'], )
+        
+        r = requests.get(self.url+"storage/collections/config/"+self.collname,
+                                data={'output_mode': 'json'},
+                                auth=self.auth,
+                                verify=False)
+        r.raise_for_status()
+        
+        
+        data = r.json()
+        if 'entry' in data:
+            for entry in data['entry']:
+                if 'name' in entry and not entry['name'] == self.collname:
+                    continue
+                if 'content' in entry:
+                    for k in [k for k in entry['content'] if k.startswith('field.')]:
+                        self[k] = entry['content'][k]
 
 # In the future, we may want to improve the usability of this adapter by
 # providing Splunk KV specific markers to help identify override default field
