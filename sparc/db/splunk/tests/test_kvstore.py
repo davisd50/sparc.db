@@ -99,12 +99,7 @@ class SparcDBSplunkKVTestCase(unittest.TestCase):
     def test_schema_adapter_for_named_collection(self):
         # tests SplunkKVCollectionSchemaFromSplunkInstance
         from sparc.db.splunk import ISplunkKVCollectionSchema
-        kv_id = \
-            component.createObject(\
-                            u"sparc.db.splunk.kv_collection_identifier",
-                            collection=u'test_collection',
-                            application=self.layer.kv_appname,
-                            username=self.layer.kv_username)
+        kv_id = self.layer.get_kv_id(u'test_collection')
         schema = component.getMultiAdapter((self.layer.sci, kv_id,), 
                                                 ISplunkKVCollectionSchema)
         for k in self.layer.kv_names['test_collection'].keys():

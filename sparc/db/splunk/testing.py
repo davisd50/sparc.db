@@ -5,6 +5,8 @@ from zope import component
 from sparc.testing.testlayer import SparcZCMLFileLayer
 import sparc.testing
 
+from kvstore import current_kv_names
+
 
 class SparcDBSplunkLayer(SparcZCMLFileLayer):
     
@@ -43,14 +45,14 @@ class SparcDBSplunkLayer(SparcZCMLFileLayer):
     
     def get_current_kv_names(self):
         """Return String names of current available Splunk KV collections"""
-        re = requests.get(self.url+"storage/collections/config",auth=self.auth, verify=False)
-        root = ET.fromstring(re.text)
-        for entry in root.findall('./{http://www.w3.org/2005/Atom}entry'):
-            name = entry.find('{http://www.w3.org/2005/Atom}title').text
-            if not name:
-                raise ValueError('unexpectedly found empty collection title')
-            yield name
-        
+        return current_kv_names(self.sci, self.kv_username, self.kv_appname)
+    
+    def get_kv_id(self, collection):
+        return component.createObject(\
+                            u"sparc.db.splunk.kv_collection_identifier",
+                            collection=collection,
+                            application=self.kv_appname,
+                            username=self.kv_username)
     
     def _destroy_kv_collections(self):
         for name in [n for n in self.kv_names if n in self.get_current_kv_names()]:
