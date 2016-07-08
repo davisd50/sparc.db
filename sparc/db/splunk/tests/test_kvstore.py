@@ -91,10 +91,14 @@ class SparcDBSplunkKVTestCase(unittest.TestCase):
     
     def test_current_kv_names(self):
         from sparc.db.splunk.kvstore import current_kv_names
+        req = component.createObject(u'sparc.utils.requests.request')
+        req.req_kwargs['verify'] = False
+        req.gooble_warnings = True
         self.assertIn('test_collection', \
                       current_kv_names(self.layer.sci,
                                        self.layer.kv_username,
-                                       self.layer.kv_appname))   
+                                       self.layer.kv_appname,
+                                       req=req))   
 
     def test_schema_adapter_for_named_collection(self):
         # tests SplunkKVCollectionSchemaFromSplunkInstance

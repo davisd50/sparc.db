@@ -1,6 +1,7 @@
 import requests
 import xml.etree.ElementTree as ET
 from zope.component import adapts
+from zope.component import createObject
 from zope.component.factory import Factory
 from zope.interface import implements
 from zope.interface import Interface
@@ -17,24 +18,26 @@ from interfaces import ISPlunkKVCollectionIdentifier
 from interfaces import ISplunkKVCollectionSchema
 from interfaces import ISplunkConnectionInfo
 
-def current_kv_names(sci, app_user, app_name):
+def current_kv_names(sci, app_user, app_name, req=None):
     """Return set of string names of current available Splunk KV collections
     
     Args:
         sci: Instance of sparc.db.splunk.ISplunkConnectionInfo
         app_user: Splunk KV Collection app user to reference
         app_name: Splunk KV Collection application name to reference
+    kwargs:
+        req: sparc.utils.requests.IRequest instance to be used to communicate
+             with remote https server
     Returns:
         Set of string names for collections found
     """
+    req = req if req else createObject(u'sparc.utils.requests.request')
+    kwargs = {'auth': (sci['username'], sci['password'], )}
     url = "".join(['https://',sci['host'],':',sci['port'],
                                     '/servicesNS/',app_user,'/',
                                                         app_name,'/'])
-    auth = (sci['username'], sci['password'], )
     _return = set()
-    r = requests.get(url+"storage/collections/config",
-                            auth=auth,
-                            verify=False)
+    r = req.request('get', url+"storage/collections/config", **kwargs)
     r.raise_for_status()
     root = ET.fromstring(r.text)
     for entry in root.findall('./atom:entry', xml_ns):

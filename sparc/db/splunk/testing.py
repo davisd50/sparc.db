@@ -1,14 +1,14 @@
-import requests
 import warnings
 import xml.etree.ElementTree as ET
 from zope import component
 from sparc.testing.testlayer import SparcZCMLFileLayer
 import sparc.testing
 
+from sparc.utils.requests.request import Request
 from kvstore import current_kv_names
 
 
-class SparcDBSplunkLayer(SparcZCMLFileLayer):
+class SparcDBSplunkLayer(SparcZCMLFileLayer, Request):
     
     """Tuple of KV collection definitions.
     
@@ -45,7 +45,7 @@ class SparcDBSplunkLayer(SparcZCMLFileLayer):
     
     def get_current_kv_names(self):
         """Return String names of current available Splunk KV collections"""
-        return current_kv_names(self.sci, self.kv_username, self.kv_appname)
+        return current_kv_names(self.sci, self.kv_username, self.kv_appname, req=self)
     
     def get_kv_id(self, collection):
         return component.createObject(\
@@ -56,9 +56,7 @@ class SparcDBSplunkLayer(SparcZCMLFileLayer):
     
     def _destroy_kv_collections(self):
         for name in [n for n in self.kv_names if n in self.get_current_kv_names()]:
-            r = requests.delete(self.url+"storage/collections/config/"+name,
-                                auth=self.auth,
-                                verify=False)
+            r = self.request('delete', self.url+"storage/collections/config/"+name)
             r.raise_for_status()
         names = self.get_current_kv_names()
         for name in self.kv_names:
@@ -68,27 +66,24 @@ class SparcDBSplunkLayer(SparcZCMLFileLayer):
     def _create_kv_collections(self):
         for name in self.kv_names:
             if name not in self.get_current_kv_names():
-                r = requests.post(self.url+"storage/collections/config",
-                                    auth=self.auth,
+                r = self.request('post',self.url+"storage/collections/config",
                                     headers = {'Content-Type': 'application/json'},
-                                    data={'name': name},
-                                    verify=False)
+                                    data={'name': name})
                 r.raise_for_status()
-            r = requests.post(self.url+"storage/collections/config/"+name,
-                                auth=self.auth,
+            r = self.request('post',self.url+"storage/collections/config/"+name,
                                 headers = {'Content-Type': 'application/json'},
-                                data=self.kv_names[name],
-                                verify=False)
+                                data=self.kv_names[name])
             r.raise_for_status()
             if name not in self.get_current_kv_names():
                 raise EnvironmentError('expected %s in list of kv collections %s' % (name, str(self.get_current_kv_names())))
     
     def setUp(self):
         super(SparcDBSplunkLayer, self).setUp()
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore") # ignore https cert warnings
-            self._destroy_kv_collections()
-            self._create_kv_collections()
+        self.req_kwargs['verify'] = False
+        self.req_kwargs['auth'] = self.auth
+        self.gooble_warnings = True
+        self._destroy_kv_collections()
+        self._create_kv_collections()
         warnings.warn("This test layer requires a running Splunk instance.  See %s for connection information." % __file__)
 
     def tearDown(self):

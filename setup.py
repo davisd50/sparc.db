@@ -43,7 +43,8 @@ setup(name='sparc.db',
           # -*- Extra requirements: -*-
       ],
       tests_require=[
-          'sparc.testing'
+          'sparc.testing',
+          'sparc.utils'
       ],
       entry_points="""
       # -*- Entry points: -*-
