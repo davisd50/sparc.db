@@ -45,7 +45,7 @@ class SparcDBSplunkLayer(SparcZCMLFileLayer, Request):
     
     def get_current_kv_names(self):
         """Return String names of current available Splunk KV collections"""
-        return current_kv_names(self.sci, self.kv_username, self.kv_appname, req=self)
+        return current_kv_names(self.sci, self.kv_username, self.kv_appname, request=self)
     
     def get_kv_id(self, collection):
         return component.createObject(\

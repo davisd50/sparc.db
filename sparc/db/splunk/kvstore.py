@@ -1,7 +1,7 @@
-import requests
 import xml.etree.ElementTree as ET
 from zope.component import adapts
 from zope.component import createObject
+from zope.component import getSiteManager
 from zope.component.factory import Factory
 from zope.interface import implements
 from zope.interface import Interface
@@ -14,11 +14,13 @@ from zope.schema.interfaces import IDottedName
 from zope.schema.interfaces import IText, INativeString
 from zope.schema.fieldproperty import FieldProperty
 from sparc.db.splunk import xml_ns
+from sparc.utils.requests import IRequest
 from interfaces import ISPlunkKVCollectionIdentifier
 from interfaces import ISplunkKVCollectionSchema
 from interfaces import ISplunkConnectionInfo
 
-def current_kv_names(sci, app_user, app_name, req=None):
+sm = getSiteManager()
+def current_kv_names(sci, app_user, app_name, request=None):
     """Return set of string names of current available Splunk KV collections
     
     Args:
@@ -26,12 +28,16 @@ def current_kv_names(sci, app_user, app_name, req=None):
         app_user: Splunk KV Collection app user to reference
         app_name: Splunk KV Collection application name to reference
     kwargs:
-        req: sparc.utils.requests.IRequest instance to be used to communicate
-             with remote https server
+        request: instance of sparc.utils.requests.IRequest
+        
+    request will be resolved via 'sparc.utils.requests.request_resolver' named
+    component.
+
     Returns:
         Set of string names for collections found
     """
-    req = req if req else createObject(u'sparc.utils.requests.request')
+    resolver = sm.getUtility(IRequest, u'sparc.utils.requests.request_resolver')
+    req = resolver(request=request)
     kwargs = {'auth': (sci['username'], sci['password'], )}
     url = "".join(['https://',sci['host'],':',sci['port'],
                                     '/servicesNS/',app_user,'/',
@@ -64,11 +70,12 @@ splunkKVCollectionSchemaFactory = Factory(SplunkKVCollectionSchema)
 
 class SplunkKVCollectionSchemaFromSplunkInstance(dict):
     implements(ISplunkKVCollectionSchema)
-    adapts(ISplunkConnectionInfo, ISPlunkKVCollectionIdentifier)
+    adapts(ISplunkConnectionInfo, ISPlunkKVCollectionIdentifier, IRequest)
     
-    def __init__(self, sci, kv_id):
+    def __init__(self, sci, kv_id, request):
         self.sci = sci
         self.kv_id = kv_id
+        self.req = request
         self.collname = kv_id.collection
         self.appname = kv_id.application
         self.username = kv_id.username
@@ -77,10 +84,10 @@ class SplunkKVCollectionSchemaFromSplunkInstance(dict):
                                                         self.appname,'/'])
         self.auth = (self.sci['username'], self.sci['password'], )
         
-        r = requests.get(self.url+"storage/collections/config/"+self.collname,
-                                data={'output_mode': 'json'},
-                                auth=self.auth,
-                                verify=False)
+        r = self.req.request('get',
+                        self.url+"storage/collections/config/"+self.collname,
+                        data={'output_mode': 'json'},
+                        auth=self.auth)
         r.raise_for_status()
         
         

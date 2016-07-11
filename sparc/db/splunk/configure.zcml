@@ -32,7 +32,8 @@
     
     <adapter
     	for="sparc.db.splunk.ISplunkConnectionInfo
-    	     sparc.db.splunk.ISPlunkKVCollectionIdentifier"
+    	     sparc.db.splunk.ISPlunkKVCollectionIdentifier
+    	     sparc.utils.requests.IRequest"
     	provides=".ISplunkKVCollectionSchema"
     	factory=".kvstore.SplunkKVCollectionSchemaFromSplunkInstance"
     	/>

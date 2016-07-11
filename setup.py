@@ -39,12 +39,12 @@ setup(name='sparc.db',
           'splunk-sdk',
           'zope.schema',
           'sparc.configuration',
-          'sparc.i18n'
+          'sparc.i18n',
+          'sparc.utils'
           # -*- Extra requirements: -*-
       ],
       tests_require=[
-          'sparc.testing',
-          'sparc.utils'
+          'sparc.testing'
       ],
       entry_points="""
       # -*- Entry points: -*-
