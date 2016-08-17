@@ -17,7 +17,12 @@ class ISplunkSavedSearches(Interface):
     """Marker for splunklib.client.SavedSearches"""
 
 class ISplunkSavedSearch(Interface):
-    """Marker for splunklib.client.SavedSearche"""
+    """Marker for splunklib.client.SavedSearch"""
+
+class ISplunkSavedSearchIterator(Interface):
+    """Iterator of ISplunkSavedSearch providers"""
+    def __iter__():
+        """returns iterator of ISplunkSavedSearch providers"""
 
 class ISplunkConnectionInfo(Interface):
     """A Python dict for Splunk connection info. see splunklib.client.connect

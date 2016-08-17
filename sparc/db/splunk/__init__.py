@@ -5,6 +5,7 @@ from interfaces import ISplunkJob
 from interfaces import ISPlunkKVCollectionIdentifier
 from interfaces import ISplunkKVCollectionSchema
 from interfaces import ISplunkSavedSearch
+from interfaces import ISplunkSavedSearchIterator
 from interfaces import ISplunkSavedSearches
 from interfaces import ISplunkSavedSearchQueryFilter
 

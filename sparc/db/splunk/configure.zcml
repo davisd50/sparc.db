@@ -27,6 +27,7 @@
     -->
     <class class="splunklib.client.SavedSearches">
       <implements interface=".ISplunkSavedSearches" />
+      <implements interface=".ISplunkSavedSearchIterator" />
     </class>
     
     
@@ -48,5 +49,11 @@
     	name="sparc.db.splunk.kv_collection_schema"
     	/>
 
+    <adapter
+    	for=".ISplunkSavedSearches
+    	     .ISplunkSavedSearchQueryFilter"
+    	provides=".ISplunkSavedSearchIterator"
+    	factory=".search.SavedSearchIteratorFromFilter"
+    	/>
     
 </configure>

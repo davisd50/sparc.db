@@ -1,8 +1,12 @@
+import re
 from zope.interface import implements
 from zope.interface.exceptions import DoesNotImplement
+from zope.component import adapts
 from zope.component.factory import Factory
 from splunklib.client import connect
 from interfaces import ISplunkConnectionInfo
+from interfaces import ISplunkSavedSearches
+from interfaces import ISplunkSavedSearchIterator
 from interfaces import ISplunkSavedSearchQueryFilter
 
 from sparc.logging import logging
@@ -39,3 +43,18 @@ def saved_searches_factory_helper(splunk_connection_info):
 saved_searches_factory = Factory(saved_searches_factory_helper,
                                  u'penny.apps.reaper.saved_searches_factory',
                                  u'Creates instances of ISplunkSavedSearches')
+
+class SavedSearchIteratorFromFilter(object):
+    implements(ISplunkSavedSearchIterator)
+    adapts(ISplunkSavedSearches, ISplunkSavedSearchQueryFilter)
+    
+    def __init__(self, searches, filter_):
+        self.searches = searches
+        self.filter = filter_
+    
+    def __iter__(self):
+        for s in self.searches:
+            if re.search(self.filter, s.name):
+                yield s
+    
+    
