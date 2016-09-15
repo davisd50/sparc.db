@@ -39,6 +39,7 @@ setup(name='sparc.db',
           'splunk-sdk',
           'zope.schema',
           'sparc.configuration',
+          'sparc.event',
           'sparc.i18n',
           'sparc.utils'
           # -*- Extra requirements: -*-
