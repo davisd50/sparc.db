@@ -54,7 +54,7 @@ True
 
 A Query Event
 --------------
-It is sometimes usefull to represent a query as a Sparc event, in essance
+It is sometimes useful to represent a query as a Sparc event, in essence
 this will be a point in time query with results.  In order to test this,
 we'll need to simulate results.  This requires some implementation of 
 IQueryResultSet, we'll use the sparc.db.splunk package for this purpose.
