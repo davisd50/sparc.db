@@ -1,41 +1,37 @@
 from zope.component import createObject
 from zope.component.factory import Factory
-from zope.interface import implements
-from zope import schema
+from zope import interface
 from zope.schema import ValidationError
 from zope.schema.fieldproperty import FieldProperty
 from sparc.event import SparcEvent
-from interfaces import IQuery
-from interfaces import IQueryEvent
-from interfaces import IQueryResultSet
-from interfaces import IResultValue
-from interfaces import IResultMultiValue
+from .interfaces import IQuery
+from .interfaces import IQueryEvent
+from .interfaces import IQueryResultSet
+from .interfaces import IResultValue
+from .interfaces import IResultMultiValue
 
+@interface.implementer(IQuery)
 class DbQuery(object):
     """A database query"""
-    implements(IQuery)
     
     def __init__(self, query):
         self.query = query
     
     #IQuery
     query = FieldProperty(IQuery['query'])
-
 dbQueryFactory = Factory(DbQuery)
 
+@interface.implementer(IResultValue)
 class ResultValue(str):
     """A value from a database query result (i.e. a table cell)"""
-    implements(IResultValue)
     
     def __new__(cls, *args, **kwargs):
         return str.__new__(cls, *args, **kwargs)
-
 resultValueFactory = Factory(ResultValue)
 
-
+@interface.implementer(IResultMultiValue)
 class ResultMultiValue(object):
     """A value from a database query result that allows for multi-value fields"""
-    implements(IResultMultiValue)
     
     def __init__(self, context):
         self.context = context
@@ -48,12 +44,11 @@ class ResultMultiValue(object):
         """Iterator of unicode capable ordered values"""
         return iter([createObject(u'sparc.db.result_value', value) for 
                                                         value in self.context])
-
 resultMultiValueFactory = Factory(ResultMultiValue)
 
+@interface.implementer(IQueryEvent)
 class QueryEvent(SparcEvent):
     """A point-in-time executed query with results"""
-    implements(IQueryEvent)
     
     def __init__(self, **kwargs):
         """Object init
@@ -75,5 +70,4 @@ class QueryEvent(SparcEvent):
     #IQueryResultSet
     def __iter__(self):
         return iter(self.results)
-
 queryEventFactory = Factory(QueryEvent)

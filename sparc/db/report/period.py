@@ -1,12 +1,12 @@
 from datetime import datetime, timedelta
-from zope.interface import implements
+from zope import interface
 from zope.component.factory import Factory
 from sparc.db.report.interfaces import ITrendReportPeriod
 
+@interface.implementer(ITrendReportPeriod)
 class trendReportPeriod(object):
     """Iterator for time splits between begin/end given a set period
     """
-    implements(ITrendReportPeriod)
         
     def __init__(self, **kwargs):
         self._begin, self._end, self._period, self._label, self._cache = None, None, None, None, {'__iter__':{}, '_steps': {}} # initialize
@@ -149,7 +149,6 @@ class trendReportPeriod(object):
                     _start['day'] = 1;
                 if _period in ['year']:
                     _start['month'] = 1;
-            
 trendReportPeriodFactory = Factory(trendReportPeriod)
         
             

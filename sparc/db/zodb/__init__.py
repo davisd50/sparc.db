@@ -1,1 +1,1 @@
-from interfaces import IZODBDatabase
+from .interfaces import IZODBDatabase

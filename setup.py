@@ -16,8 +16,7 @@ setup(name='sparc.db',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         "Programming Language :: Python :: 2",
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3'
+        'Programming Language :: Python :: 2.7'
       ],
       keywords=['zca'],
       author='David Davis',
@@ -36,7 +35,7 @@ setup(name='sparc.db',
           'setuptools',
           'ZODB',
           'SQLAlchemy',
-          'z3c.saconfig',
+          'z3c.saconfig', # Python 2 only per v0.14
           'zope.schema',
           'sparc.configuration',
           'sparc.event',

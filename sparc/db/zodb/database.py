@@ -1,14 +1,12 @@
 from ZODB import config
-from zope.component import createObject
-from zope.component import getUtility
+from zope import component
 from zope.component.factory import Factory
-from zope.interface import alsoProvides
-from zope.interface import implements
-from interfaces import IZODBDatabase
+from zope import interface
+from .interfaces import IZODBDatabase
 from sparc.configuration.xml import IAppElementTreeConfig
 
+@interface.implementer(IZODBDatabase)
 class zodbDatabaseFactoryHelper(object):
-    implements(IZODBDatabase)
     
     def __new__(self, *args, **kwargs):
         db = None
@@ -20,7 +18,7 @@ class zodbDatabaseFactoryHelper(object):
             db = config.databaseFromURL(kwargs['url'])
         if not db:
             raise ValueError('unable to obtain ZODB object from arguments')
-        alsoProvides(db, IZODBDatabase)
+        interface.alsoProvides(db, IZODBDatabase)
         return db
 zodbDatabaseFactory = Factory(zodbDatabaseFactoryHelper)
 
@@ -30,7 +28,7 @@ class zodbDatabaseFromConfigHelper(object):
     def __new__(self, xml_config = None):
         url = None
         if xml_config is None or not len(xml_config):
-            xml_config = getUtility(IAppElementTreeConfig)
+            xml_config = component.getUtility(IAppElementTreeConfig)
         for sparc in xml_config.findall('sparc'):
             for db in sparc.findall('db'):
                 for zodb in db.findall('zodb'):
@@ -38,7 +36,7 @@ class zodbDatabaseFromConfigHelper(object):
         if not url:
             raise LookupError('unable to find configuration for sparc::db::zodb::url')
         if url not in zodbDatabaseFromConfigHelper.config_map:
-            db = createObject(u'sparc.db.zodb.database', url=url)
+            db = component.createObject(u'sparc.db.zodb.database', url=url)
             zodbDatabaseFromConfigHelper.config_map[url] = db
         return zodbDatabaseFromConfigHelper.config_map[url]
 zodbFromConfigFactory = Factory(zodbDatabaseFromConfigHelper)
